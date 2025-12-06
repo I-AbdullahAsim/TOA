@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Turing Drawings — Turmite Engine</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header>
+    <h1>Turing Drawings — Turmite Engine</h1>
+    <p class="subtitle">2D Turmites (Langton-style walkers) produce reliable, beautiful emergent art.</p>
+  </header>
+
+  <main class="container">
+    <section class="left-col">
+      <div class="canvas-wrap">
+        <canvas id="canvas" width="800" height="800"></canvas>
+      </div>
+
+      <div class="controls-row">
+        <label>Canvas Size:
+          <select id="canvasSize">
+            <option value="256">256</option>
+            <option value="512" selected>512</option>
+            <option value="800">800</option>
+            <option value="1024">1024</option>
+          </select>
+        </label>
+
+        <label>Mode:
+          <select id="modeSelect">
+            <option value="spiral">Interfering Polygons</option>
+            <option value="symmetric">Symmetric</option>
+            <option value="maze">Maze</option>
+            <option value="fractal">Fractal</option>
+            <option value="crystal">Crystal (New)</option>
+            <option value="weaver">Weaver (New)</option>
+            <option value="random">Random</option>
+          </select>
+        </label>
+
+        <label>States:
+          <input id="statesInput" type="number" min="2" max="10" step="1" value="4">
+          <span style="font-size: 11px; color: #999;">(More states = more colors)</span>
+        </label>
+      </div>
+
+      <div class="controls-row">
+        <label>Steps per frame:
+          <input id="stepsPerFrame" type="range" min="100" max="20000" step="100" value="5000">
+          <span id="stepsLabel">5000</span>
+        </label>
+
+        <label>Max steps:
+          <input id="maxSteps" type="number" min="1000" max="10000000" step="1000" value="2000000">
+        </label>
+      </div>
+
+      <div class="buttons-row">
+        <button id="startBtn">Start</button>
+        <button id="stopBtn">Stop</button>
+        <button id="resetBtn">Reset</button>
+        <button id="saveBtn">Save PNG</button>
+        <button id="saveToGalleryBtn">Save to Gallery</button>
+      </div>
+
+      <div class="share-row">
+        <label>Shareable settings (copy):</label>
+        <input id="shareText" readonly>
+      </div>
+    </section>
+
+    <aside class="right-col">
+      <section class="panel">
+        <h2>Implementation Steps</h2>
+        <ol>
+          <li>Choose a mode & palette</li>
+          <li>Start the turmite — watch emergent pattern form</li>
+          <li>Adjust steps per frame or max steps to refine</li>
+          <li>Save PNG or add to gallery</li>
+        </ol>
+      </section>
+
+      <section class="panel" id="architecture">
+        <h2>System Architecture: Turmite Engine</h2>
+        <p>
+          The engine runs a single turmite (head) on a 2D grid. Each cell stores a small integer state.
+          A rule set maps current cell state → (turn left/right/stay), write new state, and move forward.
+          Repeated application of these local deterministic rules creates complex global patterns.
+        </p>
+        <ul>
+          <li>Grid: finite 2D array with wrap-around (toroidal)</li>
+          <li>Head: x,y position + direction (N,E,S,W)</li>
+          <li>Rule types: spiral, symmetric, maze, fractal, random</li>
+          <li>Palettes: curated + AI-guided generation</li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>Gallery</h2>
+        <div id="gallery"></div>
+        <div class="gallery-actions">
+          <button id="clearGalleryBtn">Clear Gallery</button>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <footer>
+    <small>No external libraries required • Works in modern browsers</small>
+  </footer>
+
+  <script type="module" src="turmite.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+/* styles.css - clean and responsive */
+
+:root{
+  --bg:#0b0b0b;
+  --panel:#f7f7f7;
+  --accent:#2d7a3e;
+  --muted:#666;
+  --white:#fff;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:Inter, Arial, sans-serif;
+  margin:0;
+  padding:0;
+  -webkit-font-smoothing:antialiased;
+}
+
+header{
+  text-align:center;
+  padding:18px 12px;
+}
+h1{margin:0; font-size:28px; color:#7bdc6a}
+.subtitle{margin:6px 0 0; color:#cfe9d0}
+
+.container{
+  display:flex;
+  gap:18px;
+  padding:18px;
+  align-items:flex-start;
+}
+
+/* left column (canvas + controls) */
+.left-col{flex:1; min-width:420px}
+.canvas-wrap{
+  background:#000;
+  border:2px solid rgba(255,255,255,0.12);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+canvas{
+  background:#000;
+  image-rendering: pixelated;
+  width:100%;
+  max-width:800px;
+  height:auto;
+  display:block;
+}
+
+/* controls */
+.controls-row{display:flex; gap:12px; margin-top:12px; flex-wrap:wrap}
+.controls-row label{display:flex; gap:8px; align-items:center; color:#ddd}
+.controls-row select, .controls-row input[type=range], .controls-row input[type=number]{
+  margin-left:6px;
+}
+
+.buttons-row{margin-top:12px; display:flex; gap:8px; flex-wrap:wrap}
+.buttons-row button{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+.buttons-row button[disabled]{opacity:.5; cursor:not-allowed}
+
+.share-row{margin-top:12px}
+.share-row input{width:100%; padding:8px; border-radius:6px; border:none}
+
+/* right column (info and gallery) */
+.right-col{width:380px}
+.panel{
+  background:#fff;
+  color:#222;
+  padding:12px;
+  border-radius:6px;
+  margin-bottom:12px;
+}
+.panel h2{color:#18466d; margin-top:0}
+#gallery{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  max-height:320px; overflow:auto;
+}
+.gallery-item{
+  width:110px; height:110px; border:1px solid #ddd; background:#000;
+  position:relative; display:flex; justify-content:center; align-items:center;
+}
+.gallery-item img{max-width:100%; max-height:100%; display:block}
+.gallery-item button{
+  position:absolute; top:4px; right:4px; background:rgba(0,0,0,.6); color:#fff; border:none; padding:4px 6px; cursor:pointer;
+  border-radius:4px; font-size:11px;
+}
+
+footer{color:#888; text-align:center; padding:12px 0}
+
+/* responsive */
+@media (max-width:980px){
+  .container{flex-direction:column}
+  .right-col{width:100%}
+}
