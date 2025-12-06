@@ -21,28 +21,31 @@ The core Turing machine logic: cell states and transitions
 stateDiagram-v2
     [*] --> State0: Initialize Grid
     
-    State0 --> State1: Read state 0<br/>Turn: L or R<br/>Write: (0+1) mod N
-    State1 --> State2: Read state 1<br/>Turn: L or R<br/>Write: (1+1) mod N
-    State2 --> State3: Read state 2<br/>Turn: L or R<br/>Write: (2+1) mod N
-    State3 --> State4: Read state 3<br/>Turn: L or R<br/>Write: (3+1) mod N
-    State4 --> State0: Read state 4<br/>Turn: L or R<br/>Write: (4+1) mod N
+    State0 --> State1: Read 0, Turn L/R, Write 1
+    State1 --> State2: Read 1, Turn L/R, Write 2
+    State2 --> State3: Read 2, Turn L/R, Write 3
+    State3 --> State4: Read 3, Turn L/R, Write 4
+    State4 --> State0: Read 4, Turn L/R, Write 0
     
     note right of State0
         State = 0
         Color = colors[0]
         Turn = turns[0]
+        Write: (0+1) mod N
     end note
     
     note right of State1
         State = 1
         Color = colors[1]
         Turn = turns[1]
+        Write: (1+1) mod N
     end note
     
     note right of State2
         State = 2
         Color = colors[2]
         Turn = turns[2]
+        Write: (2+1) mod N
     end note
 ```
 
@@ -52,26 +55,26 @@ Complete step-by-step process of a single turmite operation
 
 ```mermaid
 flowchart TD
-    Start([Start Turmite Step]) --> ReadCell[Read Cell State<br/>state = grid[y*W + x]]
-    ReadCell --> GetColor[Get Color<br/>color = colors[state]]
-    GetColor --> Draw[Draw Pixel<br/>ctx.fillRect x, y, 1, 1]
-    Draw --> GetTurn[Get Turn Direction<br/>turn = turns[state]]
-    GetTurn --> CheckTurn{Turn == 'R'?}
+    Start([Start Turmite Step]) --> ReadCell["Read Cell State<br/>state = grid at position"]
+    ReadCell --> GetColor["Get Color<br/>color = colors array"]
+    GetColor --> Draw["Draw Pixel<br/>fillRect on canvas"]
+    Draw --> GetTurn["Get Turn Direction<br/>turn = turns array"]
+    GetTurn --> CheckTurn{Turn == R?}
     
-    CheckTurn -->|Yes| TurnRight[Turn Right<br/>dir = dir + 1 mod 4]
-    CheckTurn -->|No| TurnLeft[Turn Left<br/>dir = dir - 1 mod 4]
+    CheckTurn -->|Yes| TurnRight["Turn Right<br/>dir = dir + 1 mod 4"]
+    CheckTurn -->|No| TurnLeft["Turn Left<br/>dir = dir - 1 mod 4"]
     
-    TurnRight --> UpdateState[Update Cell State<br/>grid[idx] = state + 1 mod numStates]
+    TurnRight --> UpdateState["Update Cell State<br/>grid = state + 1 mod N"]
     TurnLeft --> UpdateState
     
-    UpdateState --> MoveForward[Move Forward<br/>x += DIRS[dir][0]<br/>y += DIRS[dir][1]]
+    UpdateState --> MoveForward["Move Forward<br/>update x and y coordinates"]
     
     MoveForward --> CheckBounds{Check Boundaries}
     
-    CheckBounds -->|x < 0| WrapX1[x = W - 1]
-    CheckBounds -->|x >= W| WrapX2[x = 0]
-    CheckBounds -->|y < 0| WrapY1[y = H - 1]
-    CheckBounds -->|y >= H| WrapY2[y = 0]
+    CheckBounds -->|x < 0| WrapX1["x = W - 1"]
+    CheckBounds -->|x >= W| WrapX2["x = 0"]
+    CheckBounds -->|y < 0| WrapY1["y = H - 1"]
+    CheckBounds -->|y >= H| WrapY2["y = 0"]
     CheckBounds -->|In bounds| Continue
     
     WrapX1 --> Continue
@@ -136,31 +139,31 @@ High-level system view showing all components
 ```mermaid
 graph TB
     subgraph "Pattern Module"
-        Pattern[Pattern Module<br/>spiral/symmetric/maze/etc]
-        Pattern --> GenerateTurns[generateTurns numStates]
-        Pattern --> InitTurmites[initTurmites W, H]
-        Pattern --> GetColors[getColors numStates]
+        Pattern["Pattern Module<br/>spiral/symmetric/maze/etc"]
+        Pattern --> GenerateTurns["generateTurns numStates"]
+        Pattern --> InitTurmites["initTurmites W, H"]
+        Pattern --> GetColors["getColors numStates"]
     end
     
     subgraph "Turmite Engine"
-        Engine[Turmite Engine]
-        Grid[2D Grid<br/>Uint8Array W×H]
-        Turmites[Turmites Array<br/>x, y, dir]
-        Rules[Turn Rules<br/>Array of L/R]
-        Palette[Color Palette<br/>Array of hex colors]
+        Engine["Turmite Engine"]
+        Grid["2D Grid<br/>Uint8Array W×H"]
+        Turmites["Turmites Array<br/>x, y, dir"]
+        Rules["Turn Rules<br/>Array of L/R"]
+        Palette["Color Palette<br/>Array of hex colors"]
     end
     
     subgraph "Execution Loop"
-        Read[Read Cell State]
-        Draw[Draw Pixel]
-        Turn[Turn Direction]
-        Write[Write New State]
-        Move[Move Forward]
-        Wrap[Wrap Boundaries]
+        Read["Read Cell State"]
+        DrawOp["Draw Pixel"]
+        Turn["Turn Direction"]
+        Write["Write New State"]
+        Move["Move Forward"]
+        Wrap["Wrap Boundaries"]
     end
     
-    subgraph "Canvas"
-        Canvas[HTML5 Canvas<br/>800×800 default]
+    subgraph "Display"
+        CanvasDisplay["HTML5 Canvas<br/>800×800 default"]
     end
     
     Pattern --> Engine
@@ -174,18 +177,18 @@ graph TB
     Engine --> Palette
     
     Engine --> Read
-    Read --> Draw
-    Draw --> Turn
+    Read --> DrawOp
+    DrawOp --> Turn
     Turn --> Write
     Write --> Move
     Move --> Wrap
     Wrap --> Read
     
-    Draw --> Canvas
+    DrawOp --> CanvasDisplay
     
     style Pattern fill:#4A90E2
     style Engine fill:#2d7a3e
-    style Canvas fill:#FF8C42
+    style CanvasDisplay fill:#FF8C42
 ```
 
 ## 5. Example: Spiral Pattern State Machine
@@ -194,22 +197,24 @@ Specific example with 4 states (typical spiral pattern)
 
 ```mermaid
 stateDiagram-v2
-    [*] --> S0: State 0 (Black)
+    [*] --> S0: State 0 Black
     
-    S0 --> S1: Read 0<br/>Turn: R<br/>Write: 1<br/>Move Forward
-    S1 --> S2: Read 1<br/>Turn: R<br/>Write: 2<br/>Move Forward
-    S2 --> S3: Read 2<br/>Turn: R<br/>Write: 3<br/>Move Forward
-    S3 --> S0: Read 3<br/>Turn: L<br/>Write: 0<br/>Move Forward
+    S0 --> S1: Read 0, Turn R, Write 1
+    S1 --> S2: Read 1, Turn R, Write 2
+    S2 --> S3: Read 2, Turn R, Write 3
+    S3 --> S0: Read 3, Turn L, Write 0
     
     note right of S0
         Pattern: R R R L
         (N-1) Rights, 1 Left
         Creates expanding polygon
+        Move Forward after each step
     end note
     
     note right of S1
         Color: Blue shades
         Creates spiral arms
+        State transitions: 0→1→2→3→0
     end note
 ```
 
@@ -218,15 +223,15 @@ stateDiagram-v2
 ```mermaid
 graph LR
     subgraph "2D Toroidal Grid"
-        G1[0,0] --- G2[1,0] --- G3[2,0]
-        G4[0,1] --- G5[1,1] --- G6[2,1]
-        G7[0,2] --- G8[1,2] --- G9[2,2]
+        G1["Cell 0,0"] --- G2["Cell 1,0"] --- G3["Cell 2,0"]
+        G4["Cell 0,1"] --- G5["Cell 1,1"] --- G6["Cell 2,1"]
+        G7["Cell 0,2"] --- G8["Cell 1,2"] --- G9["Cell 2,2"]
     end
     
     subgraph "Turmite State"
-        T1[Turmite<br/>x, y, dir]
-        T2[Cell State<br/>0 to N-1]
-        T3[Direction<br/>N/E/S/W]
+        T1["Turmite<br/>x, y, dir"]
+        T2["Cell State<br/>0 to N-1"]
+        T3["Direction<br/>N/E/S/W"]
     end
     
     T1 --> G5
@@ -346,16 +351,17 @@ Traditional Turing machine transition table format
 stateDiagram-v2
     [*] --> Q0
     
-    Q0 --> Q1: Read: 0<br/>Action: Turn R/L<br/>Write: 1<br/>Move: Forward<br/>Draw: colors[0]
-    Q1 --> Q2: Read: 1<br/>Action: Turn R/L<br/>Write: 2<br/>Move: Forward<br/>Draw: colors[1]
-    Q2 --> Q3: Read: 2<br/>Action: Turn R/L<br/>Write: 3<br/>Move: Forward<br/>Draw: colors[2]
-    Q3 --> Q0: Read: 3<br/>Action: Turn R/L<br/>Write: 0<br/>Move: Forward<br/>Draw: colors[3]
+    Q0 --> Q1: Read 0, Turn R/L, Write 1, Move Forward
+    Q1 --> Q2: Read 1, Turn R/L, Write 2, Move Forward
+    Q2 --> Q3: Read 2, Turn R/L, Write 3, Move Forward
+    Q3 --> Q0: Read 3, Turn R/L, Write 0, Move Forward
     
     note right of Q0
         State 0
         Cell contains: 0
         Rule: turns[0]
         Output: colors[0]
+        Action: Turn based on rule, Write 1, Draw pixel
     end note
     
     note right of Q1
@@ -363,6 +369,23 @@ stateDiagram-v2
         Cell contains: 1
         Rule: turns[1]
         Output: colors[1]
+        Action: Turn based on rule, Write 2, Draw pixel
+    end note
+    
+    note right of Q2
+        State 2
+        Cell contains: 2
+        Rule: turns[2]
+        Output: colors[2]
+        Action: Turn based on rule, Write 3, Draw pixel
+    end note
+    
+    note right of Q3
+        State 3
+        Cell contains: 3
+        Rule: turns[3]
+        Output: colors[3]
+        Action: Turn based on rule, Write 0, Draw pixel
     end note
 ```
 
