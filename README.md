@@ -389,20 +389,295 @@ stateDiagram-v2
     end note
 ```
 
-## Pattern Examples
+## 10. Symmetric Pattern State Machine
+
+Creates mandala-like symmetric patterns with 4 turmites at corners
+
+```mermaid
+stateDiagram-v2
+    [*] --> S0: State 0 Black
+    
+    S0 --> S1: Read 0, Turn L, Write 1
+    S1 --> S2: Read 1, Turn R, Write 2
+    S2 --> S3: Read 2, Turn L, Write 3
+    S3 --> S0: Read 3, Turn R, Write 0
+    
+    note right of S0
+        Pattern: L R L R
+        Alternating turns
+        Creates symmetric paths
+        Base hue: 120 (Green)
+    end note
+    
+    note right of S1
+        4 turmites at corners
+        Facing inward
+        Creates radial symmetry
+        Mandala-like patterns
+    end note
+```
+
+## 11. Maze Pattern State Machine
+
+Creates maze-like branching structures
+
+```mermaid
+stateDiagram-v2
+    [*] --> S0: State 0 Black
+    
+    S0 --> S1: Read 0, Turn L, Write 1
+    S1 --> S2: Read 1, Turn R, Write 2
+    S2 --> S3: Read 2, Turn R, Write 3
+    S3 --> S0: Read 3, Turn L, Write 0
+    
+    note right of S0
+        Pattern: L R R L R
+        (One of three maze patterns)
+        Creates branching paths
+        Base hue: 30 (Orange)
+    end note
+    
+    note right of S1
+        Single turmite at center
+        Creates maze-like corridors
+        Branching tree structures
+        Path-finding patterns
+    end note
+```
+
+## 12. Fractal Pattern State Machine
+
+Creates self-similar, recursive-looking patterns
+
+```mermaid
+stateDiagram-v2
+    [*] --> S0: State 0 Black
+    
+    S0 --> S1: Read 0, Turn R, Write 1
+    S1 --> S2: Read 1, Turn R, Write 2
+    S2 --> S3: Read 2, Turn L, Write 3
+    S3 --> S0: Read 3, Turn L, Write 0
+    
+    note right of S0
+        Pattern: R R L L
+        Groups of same direction
+        Group size: 2-4 random
+        Creates self-similarity
+        Base hue: 280 (Magenta)
+    end note
+    
+    note right of S1
+        Single turmite at center
+        Recursive branching
+        Fractal-like structures
+        Self-repeating patterns
+    end note
+```
+
+## 13. Crystal Pattern State Machine
+
+Creates dense, blocky, city-like structures
+
+```mermaid
+stateDiagram-v2
+    [*] --> S0: State 0 Black
+    
+    S0 --> S1: Read 0, Turn R, Write 1
+    S1 --> S2: Read 1, Turn R, Write 2
+    S2 --> S3: Read 2, Turn R, Write 3
+    S3 --> S0: Read 3, Turn L, Write 0
+    
+    note right of S0
+        Pattern: R R R L
+        Room Builder logic
+        Walls (2-5 R's) + Corner (L)
+        Occasional doorway (LL)
+        Base hue: 30 (Amber/Gold)
+    end note
+    
+    note right of S1
+        4 turmites in cross formation
+        Dense geometric growth
+        City-like block structures
+        Room and wall patterns
+    end note
+```
+
+## 14. Weaver Pattern State Machine
+
+Creates textile-like highway patterns
+
+```mermaid
+stateDiagram-v2
+    [*] --> S0: State 0 Black
+    
+    S0 --> S1: Read 0, Turn R, Write 1
+    S1 --> S2: Read 1, Turn L, Write 2
+    S2 --> S3: Read 2, Turn R, Write 3
+    S3 --> S0: Read 3, Turn L, Write 0
+    
+    note right of S0
+        Pattern: R L R L
+        Base: Alternating highway
+        Mutations: 25% flipped
+        Lane shifting effect
+        Base hue: 160 (Teal/Cyan)
+    end note
+    
+    note right of S1
+        5 turmites in a row
+        Loom formation
+        Highway-like paths
+        Textile weaving patterns
+        Parallel lane structures
+    end note
+```
+
+## 15. Random Pattern State Machine
+
+Creates chaotic, unpredictable patterns (classic Langton's ant style)
+
+```mermaid
+stateDiagram-v2
+    [*] --> S0: State 0 Black
+    
+    S0 --> S1: Read 0, Turn R, Write 1
+    S1 --> S2: Read 1, Turn L, Write 2
+    S2 --> S3: Read 2, Turn R, Write 3
+    S3 --> S0: Read 3, Turn L, Write 0
+    
+    note right of S0
+        Pattern: Random L/R
+        Example: R L R L
+        (Changes each run)
+        Truly random sequence
+        Base hue: Random 0-360
+    end note
+    
+    note right of S1
+        Single turmite at center
+        Unpredictable behavior
+        Chaotic patterns
+        Classic Langton's Ant
+        Highway formation possible
+    end note
+```
+
+## Pattern Examples Summary
 
 ### Spiral Pattern (4 states)
 - Turns: `['R', 'R', 'R', 'L']`
 - Creates: Expanding polygon spirals
 - Formula: (N-1) Rights, 1 Left
+- Turmites: 1-5 clustered at center
+- Base hue: 200 (Blue)
 
 ### Symmetric Pattern (4 states)
-- Turns: `['L', 'R', 'L', 'R']` (with variations)
+- Turns: `['L', 'R', 'L', 'R']` (with 20% variation)
 - Creates: Mandala-like symmetric patterns
 - Formula: Alternating L/R
+- Turmites: 4 at corners facing inward
+- Base hue: 120 (Green)
+
+### Maze Pattern (4 states)
+- Turns: `['L', 'R', 'R', 'L', 'R']` (one of three patterns)
+- Creates: Maze-like branching structures
+- Formula: Mixed path-creating patterns
+- Turmites: 1 at center
+- Base hue: 30 (Orange)
+
+### Fractal Pattern (4 states)
+- Turns: `['R', 'R', 'L', 'L']` (groups of 2-4)
+- Creates: Self-similar recursive patterns
+- Formula: Groups of same direction
+- Turmites: 1 at center
+- Base hue: 280 (Magenta)
+
+### Crystal Pattern (4 states)
+- Turns: `['R', 'R', 'R', 'L']` (room builder)
+- Creates: Dense blocky city-like structures
+- Formula: Walls (2-5 R's) + Corner (L) + Doorway (LL)
+- Turmites: 4 in cross formation
+- Base hue: 30 (Amber/Gold)
+
+### Weaver Pattern (4 states)
+- Turns: `['R', 'L', 'R', 'L']` (with 25% mutations)
+- Creates: Textile-like highway patterns
+- Formula: Alternating base with lane shifts
+- Turmites: 5 in a row (loom)
+- Base hue: 160 (Teal/Cyan)
 
 ### Random Pattern (4 states)
-- Turns: `['L', 'R', 'R', 'L']` (randomized)
-- Creates: Chaotic, unpredictable patterns
+- Turns: Random sequence (changes each run)
+- Creates: Chaotic unpredictable patterns
 - Formula: Random L/R for each state
+- Turmites: 1 at center
+- Base hue: Random (0-360)
+
+## 16. Complete Pattern Comparison Table
+
+Side-by-side comparison of all Turing machine patterns
+
+| Pattern | Turn Sequence (4 states) | Turmites | Initialization | Base Hue | Visual Effect |
+|---------|-------------------------|----------|----------------|----------|--------------|
+| **Spiral** | R R R L | 1-5 | Center cluster | 200 (Blue) | Expanding polygon spirals |
+| **Symmetric** | L R L R | 4 | Corners inward | 120 (Green) | Mandala-like radial symmetry |
+| **Maze** | L R R L R | 1 | Center | 30 (Orange) | Branching maze corridors |
+| **Fractal** | R R L L | 1 | Center | 280 (Magenta) | Self-similar recursive patterns |
+| **Crystal** | R R R L | 4 | Cross formation | 30 (Amber) | Dense blocky city structures |
+| **Weaver** | R L R L | 5 | Row (loom) | 160 (Teal) | Highway textile patterns |
+| **Random** | Random | 1 | Center | Random | Chaotic unpredictable paths |
+
+## 17. Pattern Characteristics Matrix
+
+```mermaid
+graph TB
+    subgraph "Pattern Types"
+        Spiral["Spiral<br/>Geometric Expansion"]
+        Symmetric["Symmetric<br/>Radial Patterns"]
+        Maze["Maze<br/>Branching Paths"]
+        Fractal["Fractal<br/>Self-Similar"]
+        Crystal["Crystal<br/>Dense Structures"]
+        Weaver["Weaver<br/>Highway Patterns"]
+        Random["Random<br/>Chaotic"]
+    end
+    
+    subgraph "Turmite Count"
+        Single["Single Turmite<br/>Maze, Fractal, Random"]
+        Multiple["Multiple Turmites<br/>Spiral, Symmetric, Crystal, Weaver"]
+    end
+    
+    subgraph "Pattern Structure"
+        Ordered["Ordered Rules<br/>Spiral, Symmetric, Crystal, Weaver"]
+        Grouped["Grouped Rules<br/>Fractal, Maze"]
+        Chaotic["Chaotic Rules<br/>Random"]
+    end
+    
+    Spiral --> Multiple
+    Symmetric --> Multiple
+    Crystal --> Multiple
+    Weaver --> Multiple
+    
+    Maze --> Single
+    Fractal --> Single
+    Random --> Single
+    
+    Spiral --> Ordered
+    Symmetric --> Ordered
+    Crystal --> Ordered
+    Weaver --> Ordered
+    
+    Fractal --> Grouped
+    Maze --> Grouped
+    
+    Random --> Chaotic
+    
+    style Spiral fill:#4A90E2
+    style Symmetric fill:#2d7a3e
+    style Maze fill:#FF8C42
+    style Fractal fill:#8B5FBF
+    style Crystal fill:#FFD700
+    style Weaver fill:#00B3A4
+    style Random fill:#FF006E
+```
 
